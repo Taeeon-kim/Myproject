@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- Webpage Title -->
+    <title>크리스마스때 뭐볼래?</title>
+
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&display=swap" rel="stylesheet">
+        <!-- 구글폰트 -->
+        <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Hi Melody', cursive;
+            }
+
+
+            h3 {
+                font-weight: bold;
+                display: inline-block;
+            }
+
+            .navbar {
+                background-color: #006400;
+            }
+
+            h1,
+            h5 {
+                display: inline;
+            }
+
+            .review {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .container {
+                width: 500px;
+                margin: 50px auto;
+            }
+
+            .container #selectMovie {
+                text-align: center;
+            }
+
+
+            #reviewList {
+                text-align: center;
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                showReview();
+            });
+
+            function makeReview() {
+                let user_id = $('#user_id').val()
+                let movie_review = $('#movieReview').val()
+
+                $.ajax({
+                    type: "POST",
+                    url: "/make_review",
+                    data: {user_id_give: user_id, movie_review_give: movie_review},
+                    success: function (response) {
+                        alert(response["msg"]);
+                        window.location.reload();
+                    }
+                })
+            }
+
+            function showReview() {
+                $.ajax({
+                    type: "GET",
+                    url: "/show_review",
+                    data: {},
+                    success: function (response) {
+                        let movie_reviews = response['all_reviews']
+                        for (let i = 0; i < movie_reviews.length; i++) {
+                            let user_id = movie_reviews[i]['user_id']
+                            let movie_review = movie_reviews[i]['movie_review']
+
+                            let temp_html = `<div id="tableLine" class="review_main_wrap">
+                                            <span id="username" class="id">${user_id}</span>
+                                            <div class="input-group">
+                                              <input type="text" class="form-control" placeholder="${movie_review}" id="update_review"
+                                                     aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                              <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button" onclick="updateReview('${user_id}')">수정</button>
+                                                <button class="btn btn-outline-secondary" type="button" onclick="deleteReview('${movie_review}')">삭제</button>
+                                              </div>
+                                            </div>
+                                         </div>`
+                            $('#reviews-box').append(temp_html)
+                        }
+                    }
+                })
+            }
+
+            function deleteReview(movie_review) {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/delete",
+                    data: {movie_review_give: movie_review},
+                    success: function (response) {
+                        alert(response["msg"]);
+                        window.location.reload();
+                    }
+                })
+            }
+
+            function updateReview(user_id) {
+                let movie_review = $('#update_review').val()
+                $.ajax({
+                    type: "POST",
+                    url: "/api/update",
+                    data: {movie_review_give: movie_review, user_id_give: user_id},
+                    success: function (response) {
+                        alert(response["msg"]);
+                        window.location.reload();
+                    }
+                })
+            }
+
+        </script>
+    </head>
+<body>
+<!-- navbar 시작 -->
+<nav class="navbar navbar-light">
+    <a class="navbar-brand" href="/">
+        <span class="p-3 mb-2 bg-danger text-white">크리스마스에 뭐볼래?</span>
+    </a>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/login">logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</nav>
+<!-- navbar 종료 -->
+
+<div class="container">
+    <div id="reviewPage">
+        <div id="selectMovie">
+            <img src="{{ movie.movie_img }}"
+                 class="img-fluid" alt="Responsive image">
+        </div>
+        <div class="info">
+            <h1>{{ movie.movie_name }}</h1>
+            <p>영화에 대한 리뷰를 남겨주세요!</p>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">아이디</span>
+                </div>
+                <input type="text" class="form-control" id="user_id">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">리뷰</span>
+                </div>
+                <textarea class="form-control" id="movieReview"
+                          cols="30"
+                          rows="5" placeholder="140자까지 입력할 수 있습니다."></textarea>
+            </div>
+            <div class="review">
+                <button onclick="makeReview()" type="button" class="btn btn-primary">리뷰 작성하기</button>
+            </div>
+        </div>
+        <div class="reviews">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th id="reviewList" scope="col">리뷰목록</th>
+                </tr>
+                </thead>
+                <tbody id="reviews-box">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

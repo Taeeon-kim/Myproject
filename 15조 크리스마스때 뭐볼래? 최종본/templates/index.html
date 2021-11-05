@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>크리스마스때 뭐볼래?</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hi+Melody&display=swap" rel="stylesheet">
+    <!-- favicon 및 og-->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='christmas.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="크리스마스때 뭐볼래?"/>
+    <meta property="og:description" content="크리스마스에 보면서 지낼 영화!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='christmas.png') }}"/><meta property="og:title" content="크리스마스때 뭐볼래?"/>
+    <meta property="og:description" content="크리스마스에 보면서 지낼 영화!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='christmas.png') }}"/>
+
+
+    <style>
+        * {
+            font-family: 'Hi Melody', cursive;
+        }
+
+
+        h3 {
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .navbar {
+            background-color: #006400;
+        }
+
+        .body-section {
+            width: 80%;
+            margin: 50px auto;
+        }
+
+        #reviewBtn {
+            float: right;
+        }
+
+
+
+    </style>
+    <script>
+        //페이지가 로딩이 되자마자 실행할때.
+        $(document).ready(function () {
+
+
+        })
+        function logout(){
+
+            alert('로그아웃 하였습니다.')
+
+        }
+
+        {#function likeUpdate({{ movies.movie_name }}) {#}
+        {#      $.ajax({#}
+        {#            type: 'POST',#}
+        {#            url: '/api/like',#}
+        {#            data: {name_give: {{ movies.movie_name }}},#}
+        {#            success: function (response) {#}
+        {#                alert(response['msg']);#}
+        {#                window.location.reload()#}
+        {#            }#}
+        {#        });#}
+        {#{#}
+{#        #}
+
+    </script>
+
+</head>
+
+<body>
+<!-- navbar 시작 -->
+<nav class="navbar navbar-light">
+    <a class="navbar-brand" href="/">
+        <span class="p-3 mb-2 bg-danger text-white">크리스마스에 뭐볼래?</span>
+    </a>
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+{#                    <a id="login-join" class="nav-link text-white" href="/login">Login/Join</a>#}
+                </li>
+                <li class="nav-item">
+                    <a id="logout" class="nav-link text-white" href="/login" onclick="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</nav>
+<!-- navbar 종료 -->
+
+<div class="body-section">
+    <div class="container-fluid p-3">
+        <div id="contents-box" class="row">
+
+            {% for movie in movies %}
+                {% set title = movie.movie_name %}
+                <div class="col-xl-3 col-lg-4 col-md-6 col-xs-12 my-2">
+                    <div id="movie_card" class="card">
+                        <img id="movie_img" class="card-img-top" src="{{ movie.movie_img }}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 id="movie_title" class="card-title">{{ movie.movie_name }}</h5>
+                            <p id="movie_release" class="card-text"><small
+                                    class="text-muted">{{ movie.movie_release }}</small></p>
+                            <button id="reviewBtn" type="button" class="btn btn-success"
+                                    onclick="location.href='/review/{{ title }}'">리뷰하기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+</html>
